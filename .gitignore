@@ -1,0 +1,24 @@
+# Build artifacts
+_Build/
+build/
+[Bb]uild/
+[Bb]in/
+[Oo]ut/
+
+# Pixi environment
+.pixi/
+
+
+
+# IDE files
+.idea/
+.vs/
+*.suo
+*.user
+*.sln.docstates
+
+# Other
+*.VC.db
+*.VC.VC.opendb
+CMakeUserPresets.json
+.DS_Store

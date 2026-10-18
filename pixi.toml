@@ -1,0 +1,30 @@
+[workspace]
+name = "cpp-cmake-template"
+version = "0.1.0"
+description = "Minimal C++ project template using CMake and Pixi"
+channels = ["conda-forge"]
+platforms = ["win-64"]
+
+[dependencies]
+cmake = ">=3.31,<5"
+ninja = ">=1.12,<2"
+clang = ">=18,<24"
+clangxx = ">=18,<24"
+lld = ">=18,<24"
+clang-format = ">=18,<24"
+benchmark = ">=1.10,<2"
+gtest = ">=1.15,<2"
+
+[tasks]
+configure-debug = "cmake --preset=windows-debug"
+build-debug = { cmd = "cmake --build --preset=windows-debug", depends-on = ["configure-debug"] }
+test-debug = { cmd = "ctest --preset=windows-debug", depends-on = ["build-debug"] }
+configure-release = "cmake --preset=windows-release"
+build-release = { cmd = "cmake --build --preset=windows-release", depends-on = ["configure-release"] }
+test-release = { cmd = "ctest --preset=windows-release", depends-on = ["build-release"] }
+build-all = { depends-on = [{ task = "build-debug", environment = "default" }, { task = "build-release", environment = "default" }] }
+test-all = { depends-on = [{ task = "test-debug", environment = "default" }, { task = "test-release", environment = "default" }] }
+run = { cmd = "cmake -E env --modify PATH=path_list_prepend:$CONDA_PREFIX/Library/bin _Build/windows-debug/packages/main/cmake_template_main.exe", depends-on = ["build-debug"] }
+benchmark = { cmd = "cmake -E env --modify PATH=path_list_prepend:$CONDA_PREFIX/Library/bin _Build/windows-release/packages/benchmarks/cmake_template_benchmarks.exe", depends-on = ["build-release"] }
+format = "clang-format -i packages/benchmarks/example_benchmark.cpp packages/main/main.cpp packages/tests/smoke_test.cpp"
+clean = "cmake --build --preset=windows-debug --target clean && cmake --build --preset=windows-release --target clean"
